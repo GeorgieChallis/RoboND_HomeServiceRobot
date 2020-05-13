@@ -1,6 +1,8 @@
 #!/bin/sh
-xterm  -e  " source /opt/ros/kinetic/setup.bash;" & 
+xterm -e " roslaunch turtlebot_gazebo turtlebot_world.launch world_file:=/home/workspace/catkin_ws/src/World/MyWorld.world" &
 sleep 5
-xterm  -e  " source ../../catkin_ws/devel/setup.bash; cd catkin_ws; catkin_make; roslaunch turtlebot_gazebo turtlebot_world.launch" 
-sleep 50
- 
+xterm -e " roslaunch turtlebot_gazebo gmapping_demo.launch" &
+sleep 5
+xterm -e " roslaunch turtlebot_rviz_launchers view_navigation.launch" &
+sleep 5
+xterm -e " roslaunch turtlebot_teleop keyboard_teleop.launch"
