@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 project(pick_objects)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib
   move_base_msgs
   roscpp
+  geometry_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -68,10 +69,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   move_base_msgs
-# )
+ generate_messages(
+   DEPENDENCIES
+   move_base_msgs
+ )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -204,3 +205,8 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+include_directories(include ${catkin_INCLUDE_DIRS})
+
+add_executable(pick_objects src/pick_objects.cpp)
+target_link_libraries(pick_objects ${catkin_LIBRARIES})
+add_dependencies(pick_objects pick_objects_generate_messages_cpp)
