@@ -7,3 +7,5 @@ xterm -e " roslaunch turtlebot_gazebo amcl_demo.launch map_file:=/home/robond/wo
 sleep 5
 #add view_navigation.launch
 xterm -e " roslaunch turtlebot_rviz_launchers view_navigation.launch"
+#Launch pick_objects node
+xterm -e " rosrun pick_objects pick_objects"
