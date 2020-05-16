@@ -18,6 +18,7 @@ int main(int argc, char** argv){
   }
 
   move_base_msgs::MoveBaseGoal pickup;
+  move_base_msgs::MoveBaseGoal dropoff;
 
   // set up the frame parameters
   pickup.target_pose.header.frame_id = "odom";
@@ -41,9 +42,7 @@ int main(int argc, char** argv){
   else
     ROS_INFO("Failed to reach drop-off: %s\n", ac.getState().toString().c_str());
 
-  ros::Duration(5.0).sleep();
-
-  move_base_msgs::MoveBaseGoal dropoff;
+  sleep(5);
 
   dropoff.target_pose.header.frame_id = "odom";
   dropoff.target_pose.header.stamp = ros::Time::now();
@@ -64,6 +63,4 @@ int main(int argc, char** argv){
     ROS_INFO("Reached the drop-off point");
   else
     ROS_INFO("Failed to reach drop-off: %s\n", ac.getState().toString().c_str());
-
-  sleep(15);
 }
