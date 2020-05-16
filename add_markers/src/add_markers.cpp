@@ -1,7 +1,9 @@
 #include <ros/ros.h>
 #include <visualization_msgs/Marker.h>
+#include "nav_msgs/Odometry.h"
+#include <math.h>
 
-visualization_msgs::Marker move_marker(float, float, float);
+visualization_msgs::Marker set_marker(float, float, float);
 
 int main( int argc, char** argv )
 {
@@ -10,11 +12,14 @@ int main( int argc, char** argv )
   ros::Rate r(1);
   ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
 
+  float pickupx, pickupy, pickupw;
+  float dropoffx, dropoffy, dropoffw;
+
   visualization_msgs::Marker marker;  
 
   while (ros::ok())
   {
-    marker = move_marker(1.0, 1.0, 1.0); 
+    marker = set_marker(1.0, 1.0, 1.0); 
     // Publish the marker
     while (marker_pub.getNumSubscribers() < 1)
     {
@@ -31,7 +36,7 @@ int main( int argc, char** argv )
   }
 }
 
-visualization_msgs::Marker move_marker(float posx, float posy, float orientw){
+visualization_msgs::Marker set_marker(float posx, float posy, float orientw){
 
   visualization_msgs::Marker marker;
 
