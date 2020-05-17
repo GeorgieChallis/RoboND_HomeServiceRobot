@@ -10,6 +10,19 @@ visualization_msgs::Marker marker;
 float markersizex = 0.2;
 float markersizey = 0.3;
 
+float pickupx  = 1.0;
+float pickupy  = 1.0;
+float pickupw  = 1.0;
+
+float dropoffx = -2.0;
+float dropoffy = -1.0;
+float dropoffw = 1.0;
+
+float robotx, roboty, robotw;
+
+bool pickup = false;
+bool dropoff = false;
+
 int main( int argc, char** argv )
 {
   ros::init(argc, argv, "add_markers");
@@ -19,14 +32,6 @@ int main( int argc, char** argv )
 
   ros::Subscriber sub = n.subscribe("odom", 100, getOdom); 
 
-  float pickupx  = 1.0;
-  float pickupy  = 1.0;
-  float pickupw  = 1.0;
-
-  float dropoffx = -2.0;
-  float dropoffy = -1.0;
-  float dropoffw = 1.0;
-
   ros::Time start_time = ros::Time::now();
 
   while (ros::ok())
@@ -34,23 +39,20 @@ int main( int argc, char** argv )
     ros::Duration delta_t = ros::Time::now() - start_time;
     double delta_t_sec = delta_t.toSec();
 
-    if (delta_t_sec < 2)
+    if (!pickup && !dropoff)
     {
       marker = set_marker(pickupx, pickupy, pickupw); 
-      ROS_INFO("Marker appeared for pickup");
     }
-    else {
 
-    }
-    if (delta_t_sec < 10)
+    else if (pickup && !dropoff)
     {
       marker.action = visualization_msgs::Marker::DELETE;
-      //ROS_INFO("Marker picked up");
     }
-    else if (delta_t_sec < 15){
+    else if (pickup && dropoff){
+      ROS_INFO("Dropping off...\n");
       marker = set_marker(dropoffx, dropoffy, dropoffw); 
-      //ROS_INFO("Marker dropped off");
     }
+   
     // Publish the marker
     while (marker_pub.getNumSubscribers() < 1)
     {
@@ -68,8 +70,6 @@ int main( int argc, char** argv )
 }
 
 visualization_msgs::Marker set_marker(float posx, float posy, float orientw){
-
-  visualization_msgs::Marker marker;
 
   // Set the frame ID and timestamp.  See the TF tutorials for information on these.
   marker.header.frame_id = "map";
@@ -112,10 +112,25 @@ visualization_msgs::Marker set_marker(float posx, float posy, float orientw){
 }
 
 void getOdom(const nav_msgs::Odometry::ConstPtr& msg){
-  float robotx = msg->pose.pose.position.x;
-  float roboty = msg->pose.pose.position.y; 
-  float robotw = msg->pose.pose.orientation.w;
+  robotx = msg->pose.pose.position.x;
+  roboty = msg->pose.pose.position.y; 
+  robotw = msg->pose.pose.orientation.w;
 
-  ROS_INFO("X: %f\n", robotx);
-  ROS_INFO("Y: %f\n", roboty);
+  float threshold = 0.1;
+
+  if(!pickup && !dropoff){  
+    float distance = sqrt(pow((pickupx - robotx), 2) + pow((pickupy - roboty), 2));
+    if(distance <= threshold){
+      pickup = true;
+      ROS_INFO("Pickup marker reached!!\n");
+    }  
+  }
+  else if (pickup){
+    float distance = sqrt(pow((dropoffx - robotx), 2) + pow((dropoffy - roboty), 2));
+    if(distance <= threshold){
+      dropoff = true;
+      ROS_INFO("Dropoff marker reached!!");
+    }
+  }
+
 }

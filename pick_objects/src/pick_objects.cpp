@@ -29,8 +29,7 @@ int main(int argc, char** argv){
   pickup.target_pose.pose.position.y = 1.0;
   pickup.target_pose.pose.orientation.w = 1.0;
 
-   // Send the goal position and orientation for the robot to reach
-  ROS_INFO("Sending goal 1");
+  // Send the goal position and orientation for the robot to reach
   ac.sendGoal(pickup);
 
   // Wait an infinite time for the results
@@ -42,7 +41,7 @@ int main(int argc, char** argv){
   else
     ROS_INFO("Failed to reach drop-off: %s\n", ac.getState().toString().c_str());
 
-  sleep(5);
+  sleep(6);
 
   dropoff.target_pose.header.frame_id = "odom";
   dropoff.target_pose.header.stamp = ros::Time::now();
@@ -52,7 +51,6 @@ int main(int argc, char** argv){
   dropoff.target_pose.pose.orientation.w = 1.0;
 
    // Send the goal position and orientation for the robot to reach
-  ROS_INFO("Sending goal 2");
   ac.sendGoal(dropoff);
 
   // Wait an infinite time for the results
@@ -63,4 +61,6 @@ int main(int argc, char** argv){
     ROS_INFO("Reached the drop-off point");
   else
     ROS_INFO("Failed to reach drop-off: %s\n", ac.getState().toString().c_str());
+
+  sleep(10);
 }
