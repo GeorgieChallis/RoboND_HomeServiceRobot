@@ -6,6 +6,10 @@
 visualization_msgs::Marker set_marker(float, float, float);
 void getOdom(const nav_msgs::Odometry::ConstPtr& msg);
 
+visualization_msgs::Marker marker;  
+float markersizex = 0.2;
+float markersizey = 0.3;
+
 int main( int argc, char** argv )
 {
   ros::init(argc, argv, "add_markers");
@@ -13,16 +17,15 @@ int main( int argc, char** argv )
   ros::Rate r(1);
   ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
 
-  ros::Subscriber sub = n.subscribe("odom", 10, getOdom); 
+  ros::Subscriber sub = n.subscribe("odom", 100, getOdom); 
 
-  float pickupx, pickupy, pickupw;
-  float dropoffx, dropoffy, dropoffw;
+  float pickupx  = 1.0;
+  float pickupy  = 1.0;
+  float pickupw  = 1.0;
 
-  enum markerState {};
-
-  visualization_msgs::Marker marker;  
-
-  sleep(1);
+  float dropoffx = -2.0;
+  float dropoffy = -1.0;
+  float dropoffw = 1.0;
 
   ros::Time start_time = ros::Time::now();
 
@@ -31,19 +34,22 @@ int main( int argc, char** argv )
     ros::Duration delta_t = ros::Time::now() - start_time;
     double delta_t_sec = delta_t.toSec();
 
-    if (delta_t_sec < 5)
+    if (delta_t_sec < 2)
     {
-      marker = set_marker(1.0, 1.0, 1.0); 
+      marker = set_marker(pickupx, pickupy, pickupw); 
       ROS_INFO("Marker appeared for pickup");
     }
-    else if (delta_t_sec < 10)
+    else {
+
+    }
+    if (delta_t_sec < 10)
     {
       marker.action = visualization_msgs::Marker::DELETE;
-      ROS_INFO("Marker picked up");
+      //ROS_INFO("Marker picked up");
     }
     else if (delta_t_sec < 15){
-      marker = set_marker(-2.0, -1.0, 1.0); 
-      ROS_INFO("Marker dropped off");
+      marker = set_marker(dropoffx, dropoffy, dropoffw); 
+      //ROS_INFO("Marker dropped off");
     }
     // Publish the marker
     while (marker_pub.getNumSubscribers() < 1)
@@ -57,7 +63,7 @@ int main( int argc, char** argv )
     }
     marker_pub.publish(marker);
 
-    r.sleep();
+    ros::spinOnce();
   }
 }
 
@@ -81,8 +87,8 @@ visualization_msgs::Marker set_marker(float posx, float posy, float orientw){
   marker.action = visualization_msgs::Marker::ADD;
 
   // Set the scale of the marker -- 1x1x1 here means 1m on a side
-  marker.scale.x = 0.2;
-  marker.scale.y = 0.3;
+  marker.scale.x = markersizex;
+  marker.scale.y = markersizey;
   marker.scale.z = 0.2;
 
   // Set the color -- be sure to set alpha to something non-zero!
@@ -106,6 +112,10 @@ visualization_msgs::Marker set_marker(float posx, float posy, float orientw){
 }
 
 void getOdom(const nav_msgs::Odometry::ConstPtr& msg){
-  ROS_INFO("Position-> x: [%f], y: [%f], z: [%f]", msg->pose.pose.position.x,msg->pose.pose.position.y, msg->pose.pose.position.z);
-  ROS_INFO("Orientation-> x: [%f], y: [%f], z: [%f], w: [%f]", msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z, msg->pose.pose.orientation.w);
+  float robotx = msg->pose.pose.position.x;
+  float roboty = msg->pose.pose.position.y; 
+  float robotw = msg->pose.pose.orientation.w;
+
+  ROS_INFO("X: %f\n", robotx);
+  ROS_INFO("Y: %f\n", roboty);
 }
