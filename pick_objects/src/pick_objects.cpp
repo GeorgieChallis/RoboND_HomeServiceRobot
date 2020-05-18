@@ -41,7 +41,7 @@ int main(int argc, char** argv){
   else
     ROS_INFO("Failed to reach drop-off: %s\n", ac.getState().toString().c_str());
 
-  sleep(6);
+  sleep(5);
 
   dropoff.target_pose.header.frame_id = "odom";
   dropoff.target_pose.header.stamp = ros::Time::now();

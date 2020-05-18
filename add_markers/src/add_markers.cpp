@@ -30,7 +30,7 @@ int main( int argc, char** argv )
   ros::Rate r(1);
   ros::Publisher marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 1);
 
-  ros::Subscriber sub = n.subscribe("odom", 100, getOdom); 
+  ros::Subscriber sub = n.subscribe("odom", 250, getOdom); 
 
   ros::Time start_time = ros::Time::now();
 
@@ -49,7 +49,6 @@ int main( int argc, char** argv )
       marker.action = visualization_msgs::Marker::DELETE;
     }
     else if (pickup && dropoff){
-      ROS_INFO("Dropping off...\n");
       marker = set_marker(dropoffx, dropoffy, dropoffw); 
     }
    
@@ -116,16 +115,16 @@ void getOdom(const nav_msgs::Odometry::ConstPtr& msg){
   roboty = msg->pose.pose.position.y; 
   robotw = msg->pose.pose.orientation.w;
 
-  float threshold = 0.1;
-
-  if(!pickup && !dropoff){  
+  if(!pickup){  
+    float threshold = 0.15;
     float distance = sqrt(pow((pickupx - robotx), 2) + pow((pickupy - roboty), 2));
     if(distance <= threshold){
       pickup = true;
       ROS_INFO("Pickup marker reached!!\n");
     }  
   }
-  else if (pickup){
+  else{
+    float threshold = 0.3;
     float distance = sqrt(pow((dropoffx - robotx), 2) + pow((dropoffy - roboty), 2));
     if(distance <= threshold){
       dropoff = true;
