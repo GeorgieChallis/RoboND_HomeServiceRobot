@@ -10,12 +10,12 @@ visualization_msgs::Marker marker;
 float markersizex = 0.2;
 float markersizey = 0.3;
 
-float pickupx  = 1.0;
-float pickupy  = 1.0;
+float pickupx  = -1.0;
+float pickupy  = -1.0;
 float pickupw  = 1.0;
 
-float dropoffx = -2.0;
-float dropoffy = -1.0;
+float dropoffx = 4.0;
+float dropoffy = -1.5;
 float dropoffw = 1.0;
 
 float robotx, roboty, robotw;
@@ -120,15 +120,16 @@ void getOdom(const nav_msgs::Odometry::ConstPtr& msg){
     float distance = sqrt(pow((pickupx - robotx), 2) + pow((pickupy - roboty), 2));
     if(distance <= threshold){
       pickup = true;
-      ROS_INFO("Pickup marker reached!!\n");
+      ROS_INFO("Pick-up marker reached!!\n");
     }  
   }
   else{
     float threshold = 0.3;
     float distance = sqrt(pow((dropoffx - robotx), 2) + pow((dropoffy - roboty), 2));
     if(distance <= threshold){
+      if (!dropoff){ROS_INFO("Drop-off marker reached!!\n");}
       dropoff = true;
-      ROS_INFO("Dropoff marker reached!!");
+
     }
   }
 
