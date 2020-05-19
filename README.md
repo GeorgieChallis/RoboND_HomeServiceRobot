@@ -11,11 +11,4 @@ This project is intended to be built within a [catkin workspace](http://wiki.ros
 * `turtlebot_gazebo`: [https://github.com/turtlebot/turtlebot_simulator](https://github.com/turtlebot/turtlebot_simulator)
 
 
-## Project Sections Checklist
-* Simulation Setup (50%)
-* SLAM Testing (90%)
-* Wall Follower Node (0%)
-* Navigation Testing (50%)
-* Waypoint node (80%)
-* Virtual Objects (100%)
-* Put it all together (25%)
+![Marker Pick-up](https://github.com/GeorgieChallis/RoboND_HomeServiceRobot/image/Marker%20pickup.png)
