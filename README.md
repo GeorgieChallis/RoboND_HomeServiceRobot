@@ -11,4 +11,4 @@ This project is intended to be built within a [catkin workspace](http://wiki.ros
 * `turtlebot_gazebo`: [https://github.com/turtlebot/turtlebot_simulator](https://github.com/turtlebot/turtlebot_simulator)
 
 
-![Marker Pick-up](https://github.com/GeorgieChallis/RoboND_HomeServiceRobot/blob/master/image/Marker%20pickup.png | width=420)
+<img src="https://github.com/GeorgieChallis/RoboND_HomeServiceRobot/blob/master/image/Marker%20pickup.png" width="420">
